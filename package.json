@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "description": "\"lenslight proje\"",
   "main": "app.js",
+  "type": "module",
+
   "scripts": {
     "start": "nodemon app.js"
   },
   "author": "Eyüp Canbay",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "mongoose": "^8.8.2",
     "nodemon": "^3.1.7"
   }
 }
