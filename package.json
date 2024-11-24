@@ -1,0 +1,15 @@
+{
+  "name": "lenslight",
+  "version": "1.0.0",
+  "description": "\"lenslight proje\"",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "Eyüp Canbay",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7"
+  }
+}
