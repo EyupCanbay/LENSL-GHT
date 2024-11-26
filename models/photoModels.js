@@ -8,7 +8,7 @@ const photoSchema = new Schema({
         required: true,
         trim: true
     },
-    desciption: {
+    description: {
         type: String,
         required: true,
         trim: true    // başta ve sonda girilen boşluklardan kurtulmamızı sağlar.
@@ -16,9 +16,9 @@ const photoSchema = new Schema({
     uploadedAt: {
         type: Date,
         default: Date.now,
-    }
-})
+    },
+});
 
 
-const photo = mongoose.model('Photo', Schema);
-export default photo
+const Photo = mongoose.model('Photo', photoSchema);
+export default Photo
