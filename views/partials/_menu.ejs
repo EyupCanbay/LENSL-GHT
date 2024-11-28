@@ -13,24 +13,30 @@
                    <ul>
                       <li><a class="<%= link === 'index' && 'active' %>"href="/">Home</a></li>
                       <li><a class="<%= link === 'about' && 'active' %>"href= "/about">About</a></li>
-                      <li><a href="/services">Services</a></li>
-                      <li><a class="<%= link === 'photos' && 'active' %>" href="/photos">Photos</a></li>
-                      <li><a href="/projects">Projects</a></li>
+                      <li><a class="<%= link === 'photos' && 'active' %>" href="/photos">Photos</a></li>   
+                      <%    if (user){   %>
+                        <li><a class="<%= link === 'dashboard' && 'active' %>" href="/users/dashboard">Dashboard</a></li>
+                        <li><a class="<%= link === 'logout' && 'active' %>" href="/logout">Logout</a></li>
+                     <%     } else{      %>
+                             <li><a class="<%= link === 'login' && 'active' %>" href="/login">Login</a></li>
+                             <li><a class="<%= link === 'register' && 'active' %>" href="/register">Register</a></li>
+                       <%    }    %>
+
+   <!--                  <li><a href="/projects">Projects</a></li>
                       <li><a href="/blog">Blog</a></li>
-                      <li><a class="<%= link === 'login' && 'active' %>" href="/login">Login</a></li>
-                      <li><a class="<%= link === 'register' && 'active' %>" href="/register">Register</a></li>
+                      <li><a href="/services">Services</a></li>                                          -->
                      </ul>
-                   <button class="nav-toggler">
+                   <!-- <button class="nav-toggler">
                    <span></span>
-                   </button>
+                   </button> -->
                 </nav>
-             </div>
+             <!-- </div>
           </div>
-          <div class=" col-md-2 di_none">
+           <div class=" col-md-2 di_none">
             <ul class="email text_align_right"><li><a href="Javascript:void(0)">Login</a></li>
             <li><a href="Javascript:void(0)"><i class="fa fa-search" aria-hidden="true"></i></a></li>
             </ul>
-          </div>
+          </div> 
        </div>
-    </div>
+    </div> -->
  </header>

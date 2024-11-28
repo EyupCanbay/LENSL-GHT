@@ -1,8 +1,6 @@
 
 const getIndexPage = (req,res)=> {
   
-    console.log("request user:::" , req.user)
-
     res.render("index", {
         link: 'index',
     });
@@ -26,4 +24,11 @@ const getLogInPage = (req,res) => {
     });
 }
 
-export{ getIndexPage, getAboutPage, getRegisterPage, getLogInPage };
+const getLogout = (req,res) => {
+    res.cookie('jsonwebtoken', '',{
+        maxAge: 1,
+    });
+    res.redirect('/')
+}
+
+export{ getIndexPage, getAboutPage, getRegisterPage, getLogInPage, getLogout};

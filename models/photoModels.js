@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { SchemaType } from "mongoose";
 
 const { Schema } = mongoose;
 
@@ -17,6 +17,10 @@ const photoSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    user:{
+        type: Schema.Types.ObjectId,
+        ref:"User",
+    }
 });
 
 

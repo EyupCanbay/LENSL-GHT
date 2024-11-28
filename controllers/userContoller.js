@@ -1,21 +1,37 @@
 import User from "../models/userModels.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Photo from "../models/photoModels.js";
+
 
 
 const userCreate = async (req,res)=>{
     try{
         const user = await User.create(req.body);
-        res.status(201).json({
-            succeeded: true,
-            user,
-        });
+        res.status(201).json( {user: user._id } );   
+        
     } catch(error){
-        console.log("error", error)
+        
+        let errors2 = {}
 
-        res.status(500).json({
-            succeeded: false,
-        });
+        if(error.name === "ValidationError"){
+            Object.keys(error.errors).forEach((key) => {
+                errors2[key] = error.errors[key].message;
+            })
+        }
+        
+        
+        
+        if(error.code === 11000){
+            errors2.email = "The email is already registered."
+        }
+        
+        
+        
+        
+        
+
+        res.status(400).json(errors2);
     }
 };
 
@@ -37,10 +53,14 @@ const loginUser = async (req,res) => {
         }
 
         if(same){
-            res.status(200).json({
-                user,
-                token: createToken(user._id),
+            const token =  createToken(user._id);
+            res.cookie("jsonwebtoken", token, {
+                httpOnly:true,
+                maxAge: 1000*60*60*24,
             })
+
+            res.redirect("/users/dashboard");
+            
         } else{
              res.status(401).json({
                 succeeded: false,
@@ -61,5 +81,12 @@ const createToken = (userId) => {
     });
 }
 
+const getDashboardPage = async(req,res)=>{
+    const photos = await Photo.find({ user: res.locals.user._id })
+    res.render("dashboard",{
+        link : 'dashborad',
+        photos
+    });
+}
 
-export { userCreate, loginUser};
+export { userCreate, loginUser, getDashboardPage };
