@@ -2,6 +2,7 @@ import User from "../models/userModels.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Photo from "../models/photoModels.js";
+import mongoose from "mongoose";
 
 
 
@@ -69,24 +70,213 @@ const loginUser = async (req,res) => {
         }
     } catch {
         res.status(500).json({
-            suuceeded: false,
+            succeeded: false,
             error,
         });
     }
 }
 
 const createToken = (userId) => {
-    return jwt.sign({userId}, process.env.JWT_SECRET, {
-        expiresIn:'1d',
-    });
+    return jwt.sign(
+        {userId}, 
+        process.env.JWT_SECRET, 
+        { expiresIn:'1d'}
+    );
 }
 
 const getDashboardPage = async(req,res)=>{
-    const photos = await Photo.find({ user: res.locals.user._id })
+    const photos = await Photo.find({ user: res.locals.user._id });
+    const user = await User.findById({_id:res.locals.user._id  }).populate(['followings','followers']);
     res.render("dashboard",{
         link : 'dashborad',
         photos
     });
 }
 
-export { userCreate, loginUser, getDashboardPage };
+
+const getAllUsers = async(req,res) => {
+   
+    try{
+        const users = await User.find({ _id: {$ne: res.locals.user._id}});
+        res.status(201).render('users',{
+            link: 'users',
+            users,
+        })
+    } catch{
+        res.status(500).json({
+            succeeded : false,
+            error:"Kullanilar Cekilemedi",
+            details: error.message,
+        });
+    }
+} 
+
+const getAUser = async(req,res) =>{
+    
+        const isValidId = mongoose.Types.ObjectId.isValid(req.params.id)
+        if(!isValidId){
+            res.status(404).json({
+                succeeded: false,
+                error: "Id is not found",
+                details: error.message
+            });
+            return;
+        }
+    try{
+        const user = await User.findById(req.params.id);
+      
+      const inFollowers= user.followers.some((follower) => {
+        return follower.equals(res.locals.user._id)
+      });
+      
+      
+        const photos = await Photo.find({ user: user._id});
+
+        if(!user){
+            res.status(404).json({
+                succeeded : false,
+                error: "User is not found",
+                details : error.message,
+            })
+            return;
+        }
+        res.status(201).render('user',{
+            link : 'user',
+            photos,
+            user,
+            inFollowers,
+        });
+    }catch(error) {
+        res.status(500).json({
+            succeeded: false,
+            error: "server error",
+            details: error.message,
+        });
+    }
+}
+
+const getFollowAUser = async(req,res) => {
+    
+    try{
+    let user =   await User.findByIdAndUpdate(
+            {_id: req.params.id},
+            {
+                $push: {followers: res.locals.user._id}
+            },
+            {new: true}
+        );
+
+        if (!user){
+            return res.status(404).json({
+             error: "follower's user is Not Found",
+             details : error.details
+            })
+         }
+
+        user = await User.findByIdAndUpdate(
+            {_id : res.locals.user._id},
+            {
+                $push:{followings: req.params.id},
+            },
+            {new: true},
+        );
+
+        
+        if (!user){
+            return res.status(404).json({
+                error:"following's user is Not Found",
+                details : error.details
+            })
+        }
+        res.status(200).redirect('/users/dashboard');
+        
+    } catch (error){
+        if(error){
+            res.status(500).json({
+                error: "Server Error",
+                details: error.message,
+            })
+        }
+        else if (error.name === 'ValidationError') {
+            res.status(400).json({
+                error: "Invalid data",
+                details: error.details,
+            })
+        }
+        else if (error.code === 11000) {
+            res.status(409).json({
+                error: "Have been already followers"
+            })
+        }
+    }
+    
+   
+}
+
+
+
+const getUnfollowAUser = async(req,res) => {
+    
+    try{
+    let user =   await User.findByIdAndUpdate(
+            {_id: req.params.id},
+            {
+                $pull: {followers: res.locals.user._id}
+            },
+            {new: true}
+        );
+
+        if (!user){
+            return res.status(404).json({
+             error: "unfollower's user is Not Found",
+             details : error.details
+            })
+         }
+
+        user = await User.findByIdAndUpdate(
+            {_id : res.locals.user._id},
+            {
+                $pull:{followings: req.params.id},
+            },
+            {new: true},
+        );
+
+        if (!user){
+            return res.status(404).json({
+             error:"unfollowing's user is Not Found",
+             details : error.details
+            })
+         }
+ 
+         res.status(200).redirect("/users/dashboard");
+        
+        
+    } catch (error){
+        if(error){
+            res.status(500).json({
+                error: "Server Error",
+                details: error.message,
+            })
+        }
+        else if (error.name === 'ValidationError') {
+            res.status(400).json({
+                error: "Invalid data",
+                details: error.details,
+            })
+        }
+        else if (error.code === 11000) {
+            res.status(409).json({
+                error: "Have been already followers"
+            })
+        }
+    }
+}
+
+
+export { userCreate, 
+    loginUser, 
+    getDashboardPage,  
+    getAllUsers, 
+    getAUser, 
+    getFollowAUser,
+    getUnfollowAUser};
