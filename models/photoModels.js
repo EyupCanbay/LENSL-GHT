@@ -20,11 +20,12 @@ const photoSchema = new Schema({
     user:{
         type: Schema.Types.ObjectId,
         ref:"User",
-        required: true,
     },
     linkPhoto: {
         type: String,
-        required: true,
+    },
+    publicId:{
+        type: String,
     }
 });
 

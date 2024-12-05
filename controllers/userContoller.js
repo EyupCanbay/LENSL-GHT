@@ -87,9 +87,12 @@ const createToken = (userId) => {
 const getDashboardPage = async(req,res)=>{
     const photos = await Photo.find({ user: res.locals.user._id });
     const user = await User.findById({_id:res.locals.user._id  }).populate(['followings','followers']);
+    
+    
     res.render("dashboard",{
         link : 'dashborad',
-        photos
+        photos,
+        user,
     });
 }
 
@@ -123,13 +126,10 @@ const getAUser = async(req,res) =>{
             return;
         }
     try{
-        const user = await User.findById(req.params.id);
-      
-      const inFollowers= user.followers.some((follower) => {
-        return follower.equals(res.locals.user._id)
-      });
-      
-      
+         const user = await User.findById(req.params.id);
+    
+        const inFollowers = user.followers.includes(res.locals.user._id);
+
         const photos = await Photo.find({ user: user._id});
 
         if(!user){
@@ -145,6 +145,7 @@ const getAUser = async(req,res) =>{
             photos,
             user,
             inFollowers,
+            userLocal:res.locals.user.nameSurname,
         });
     }catch(error) {
         res.status(500).json({
@@ -188,7 +189,7 @@ const getFollowAUser = async(req,res) => {
                 details : error.details
             })
         }
-        res.status(200).redirect('/users/dashboard');
+        res.status(200).redirect(`/users/${req.params.id}`);
         
     } catch (error){
         if(error){
@@ -248,7 +249,7 @@ const getUnfollowAUser = async(req,res) => {
             })
          }
  
-         res.status(200).redirect("/users/dashboard");
+         res.status(200).redirect(`/users/${req.params.id}`);
         
         
     } catch (error){
@@ -272,11 +273,11 @@ const getUnfollowAUser = async(req,res) => {
     }
 }
 
-
 export { userCreate, 
     loginUser, 
     getDashboardPage,  
     getAllUsers, 
     getAUser, 
     getFollowAUser,
-    getUnfollowAUser};
+    getUnfollowAUser,
+    };
