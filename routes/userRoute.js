@@ -14,5 +14,4 @@ router.route('/:id/follow').put(aoutMiddleware.authenticateToken,userController.
 router.route('/:id/unfollow').put(aoutMiddleware.authenticateToken,userController.getUnfollowAUser);
 
 
-
 export default router;

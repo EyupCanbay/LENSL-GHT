@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-6">
               <div class="about_img">
-                <figure><img style="z-index:1 ;" src="<%- photo.linkPhoto %>" alt="<%-photo.name%>"/></figure>
+                <figure><img style="z-index:1 ;" src="<%-photo.linkPhoto %>" alt="<%-photo.name%>"/></figure>
               </div>
    
             </div>
@@ -52,54 +52,69 @@
       <!-- end about -->
       <!-- end footer -->
 
-      <div id="updateModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div style="margin-top: 50px; margin-bottom: 50px;" class="container">
-            <div class="row">
-              <div class="col-md-12 ">
-                <div class="text_align_center">
-                  <h2 style="
-                  font-size: 30px;
-                  margin-bottom: 20px;
-                  color: #D43A8E;
-              ">Add New Photo</h2>
+      <div id="updateModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h5 class="modal-title" id="myLargeModalLabel" style="color: #D43A8E;">Update Photo</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <!-- Modal Body -->
+            <div style="margin: 50px 0;" class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="text-center">
+                    <h2 style="font-size: 30px; margin-bottom: 20px; color: #D43A8E;">Edit Photo Details</h2>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-10 offset-md-1">
-                <form id="request" class="main_form" action="/photos/<%=photo._id%>?_method=PUT" enctype="multipart/form-data">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <input value="<%=photo.name%>" class="form_control" placeholder="Name" type="text" name="name">
-                    </div>
-                    <div class="col-md-12">
-                      <textarea name="description" style="height: 150px;" class="form_control"
-                        placeholder="Description" rows="5" ><%=photo.description%></textarea>
-                    </div>
-
-                    <div style="margin-bottom: 20px ;" class="col-md-12">
-                      <input type="file" name="image"  class="form-control-file">
-                    </div>
-
-                    <div class="col-md-12">
-                      <div class="group_form">
-                        <button class="read_more">Update Photo</button>
+                <div class="col-md-10 offset-md-1">
+                  <form id="updateForm" class="main_form" method="POST" action="/photos/<%= photo._id %>?_method=PUT" enctype="multipart/form-data">
+                    <div class="row">
+                      <!-- Photo Name -->
+                      <div class="col-md-12">
+                        <input 
+                          value="<%= photo.name %>" 
+                          class="form-control" 
+                          placeholder="Name" 
+                          type="text" 
+                          name="name" 
+                          required>
+                      </div>
+                      <!-- Photo Description -->
+                      <div class="col-md-12">
+                        <textarea 
+                          name="description" 
+                          style="height: 150px;" 
+                          class="form-control" 
+                          placeholder="Description" 
+                          rows="5" 
+                          required><%= photo.description %></textarea>
+                      </div>
+                      <!-- Photo File Upload -->
+                      <div class="col-md-12" style="margin-bottom: 20px;">
+                        <input 
+                          type="file" 
+                          name="image" 
+                          class="form-control-file">
+                      </div>
+                      <!-- Submit Button -->
+                      <div class="col-md-12">
+                        <div class="form-group text-center">
+                          <button class="btn btn-primary" style="min-width: 266px;">Update Photo</button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      
    
          <%- include("partials/_footer") %>
 

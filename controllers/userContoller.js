@@ -12,7 +12,7 @@ const userCreate = async (req,res)=>{
         res.status(201).json( {user: user._id } );   
         
     } catch(error){
-        
+    
         let errors2 = {}
 
         if(error.name === "ValidationError"){
@@ -21,17 +21,10 @@ const userCreate = async (req,res)=>{
             })
         }
         
-        
-        
         if(error.code === 11000){
             errors2.email = "The email is already registered."
         }
         
-        
-        
-        
-        
-
         res.status(400).json(errors2);
     }
 };
